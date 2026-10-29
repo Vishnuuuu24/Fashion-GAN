@@ -1,48 +1,50 @@
+import pandas as pd
 import streamlit as st
 
-from core.models import (CLASS_ICONS, CLASS_NAMES, DISCRIMINATOR_FILE, GENERATOR_FILE, JUDGE_FILE, ASSET_DIR,
-                         has)
+from core.models import ASSET_DIR, DISCRIMINATOR_FILE, GENERATOR_FILE, JUDGE_FILE, has
 
-st.title("👗 Fashion GAN Studio")
-st.markdown(
-    "A **Conditional GAN** that draws new clothing images of the category you choose — trained from scratch on "
-    "**Fashion-MNIST** (70,000 images, 10 categories)."
-)
-st.markdown(" ".join(f"{icon} {name}" for icon, name in zip(CLASS_ICONS, CLASS_NAMES)))
+st.title("👗 Fashion GAN")
+st.markdown("A conditional GAN that draws clothing of the category you choose. Built from scratch, "
+            "trained on Fashion-MNIST.")
+
+log = ASSET_DIR / "training_log.csv"
+if log.exists():
+    final = pd.read_csv(log).iloc[-1]
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Class accuracy", f"{final['class accuracy']:.1%}")
+    c2.metric("Categories", "10")
+    c3.metric("Image size", "28 × 28")
+    c4.metric("Training", f"{int(final['epochs'])} epochs")
 
 c1, c2, c3 = st.columns(3)
 with c1, st.container(border=True):
-    st.subheader("🎨 Generate")
-    st.markdown("Pick a category and generate new images, see all categories with the same noise, and morph "
-                "between two designs.")
-    st.page_link("views/generate.py", label="Open the generator", icon="➡️")
+    st.markdown("**🎨 Generate**  \nCreate new images of any category.")
+    st.page_link("views/generate.py", label="Open", icon="➡️")
 with c2, st.container(border=True):
-    st.subheader("🔍 Input → Output")
-    st.markdown("See what goes in (noise + label), what comes out, how it differs from real images, and what the "
-                "discriminator thinks.")
-    st.page_link("views/explain.py", label="Open input → output", icon="➡️")
+    st.markdown("**🔍 Input → Output**  \nWhat goes in, what comes out.")
+    st.page_link("views/explain.py", label="Open", icon="➡️")
 with c3, st.container(border=True):
-    st.subheader("📊 Results")
-    st.markdown("Three discriminators compared (Vanilla, cGAN, AC-GAN), training progress, and the log of every "
-                "training run.")
-    st.page_link("views/results.py", label="Open the results", icon="➡️")
+    st.markdown("**📊 Results**  \nDiscriminators compared, training log.")
+    st.page_link("views/results.py", label="Open", icon="➡️")
 
-if (ASSET_DIR / "training.gif").exists():
-    st.image(str(ASSET_DIR / "training.gif"), caption="Training progress — rows are categories", width=360)
+left, right = st.columns([1, 1.4], gap="large")
+with left:
+    if (ASSET_DIR / "training.gif").exists():
+        st.image(str(ASSET_DIR / "training.gif"), caption="Training, epoch by epoch")
+with right:
+    st.subheader("How it works")
+    st.markdown(
+        """
+| | Generator | Discriminator |
+|---|---|---|
+| Input | 100 random numbers + category | image + category |
+| Output | 28×28 image | probability it is real |
+| Goal | fool the discriminator | catch fakes |
 
-st.divider()
-st.subheader("How it works")
-st.markdown(
-    """
-* **Generator** — takes **100 random numbers** (noise) + a **category label** and turns them into a 28 × 28 image
-  using Dense and Conv2DTranspose layers.
-* **Discriminator** — a CNN that looks at an image + its label and outputs the probability that it is **real**.
-* **Training** — the two networks take turns: D learns to spot fakes, G learns to fool D. Both use binary
-  cross-entropy loss and the Adam optimizer.
+They train in turns with binary cross-entropy and Adam.
 """
-)
+    )
 
-st.subheader("Model status")
-for name, f in [("Generator", GENERATOR_FILE), ("Discriminator", DISCRIMINATOR_FILE), ("Judge classifier", JUDGE_FILE)]:
-    st.markdown(f"✅ **{name}** — `models/{f}`" if has(f) else
-                f"❌ **{name}** — missing `models/{f}` (train with `fashion_conditional_gan.ipynb`)")
+missing = [f for f in (GENERATOR_FILE, DISCRIMINATOR_FILE, JUDGE_FILE) if not has(f)]
+if missing:
+    st.error("Missing model files in `models/`: " + ", ".join(f"`{f}`" for f in missing))
