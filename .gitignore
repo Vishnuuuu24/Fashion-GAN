@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+data/
+gan_outputs/
+gan_results/
+*.zip
