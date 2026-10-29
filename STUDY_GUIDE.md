@@ -175,9 +175,24 @@ For each generated image we found the closest real training image and showed the
 different. Also, the same label with different noise gives many different designs.
 
 **Q: Which discriminator worked best and why?**
-See the comparison table in the notebook / app. Vanilla can't control the category (≈ 10 % class accuracy). cGAN and
-AC-GAN both follow the label; AC-GAN usually has the highest class accuracy (G is directly rewarded for being
-classifiable), cGAN gives more variety. We used cGAN as the final model.
+After 10 epochs each: Vanilla **10.1 %** (chance — it ignores the label), cGAN **81.6 %**, AC-GAN **94.9 %** class
+accuracy. AC-GAN is highest because G is directly rewarded for being classifiable; cGAN gives more variety and is the
+standard conditional GAN, so we used it as the final model. Trained for 30 epochs, the cGAN reached **89.3 %** — close
+to the judge's own 90.3 % accuracy on real images.
+
+**Q: What are your final results?**
+Final cGAN, 30 epochs: 89.3 % of generated images are recognised as the requested category (judge on real images:
+90.3 %). Best categories: trouser, sandal, bag (≈ 98–99 %). Worst: shirt (43.6 %) — the judge only gets 60.9 % of
+*real* shirts right too, because shirts look like T-shirts, pullovers and coats.
+
+**Q: What changed between your training runs?**
+Only one thing at a time: the discriminator type (3 runs of 10 epochs), then the number of epochs (cGAN 10 → 30,
+accuracy 81.6 % → 89.3 %). Every run's model is saved in `runs/` and logged in `TRAINING_LOG.md`.
+
+**Q: Why does the discriminator give about 0.4 to both real and generated images?**
+At the end of training G fools D most of the time, so D is unsure about everything — that is the goal of GAN
+training (ideal = 0.5 for both). It gave random noise a similar score because D never saw pure noise during
+training; D only learns to separate real images from G's current images.
 
 **Q: What does the label do vs what does the noise do?**
 Label = which product (category). Noise = style (shape, thickness, brightness, pattern). Shown in the "same noise,

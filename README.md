@@ -10,9 +10,21 @@ images of whatever category you ask for — T-shirt, trouser, sneaker, bag, …
 | [`fashion_conditional_gan.ipynb`](fashion_conditional_gan.ipynb) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Vishnuuuu24/Fashion-GAN/blob/main/fashion_conditional_gan.ipynb) | The notebook: theory, generator, **3 discriminators compared** (Vanilla GAN, cGAN, AC-GAN), training, input-vs-output analysis |
 | [`fashion_gan_app/`](fashion_gan_app) | Streamlit app to generate images and explore input → output |
 | [`TRAINING_LOG.md`](TRAINING_LOG.md) | Notes on every training run (settings, results, what changed) |
+| [`runs/`](runs) | Saved generator + discriminator of **every** training run |
+| [`results/epochs/`](results/epochs) | Sample grid after every epoch of the final run |
 | [`STUDY_GUIDE.md`](STUDY_GUIDE.md) | Explanation of every part + likely viva questions and answers |
 
-**Live app:** APP_URL
+**Live app:** https://fashion-gan-studio.streamlit.app
+
+## Results
+| Discriminator (10 epochs) | Class accuracy* |
+|---|---|
+| Vanilla GAN | 10.1 % (chance — ignores the label) |
+| cGAN | 81.6 % |
+| AC-GAN | 94.9 % |
+| **Final cGAN, 30 epochs** | **89.3 %** |
+
+\* % of generated images that a separate CNN classifier (90.3 % accurate on real images) recognises as the requested category.
 
 ## How it works (short)
 * **Generator** — input: 100 random numbers (noise) + a category label → output: a 28 × 28 image.

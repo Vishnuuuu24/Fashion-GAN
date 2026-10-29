@@ -1,0 +1,5 @@
+run,discriminator,epochs,batch size,learning rate,latent dim,final D loss,final G loss,class accuracy,time (s),finished at,note
+compare_vanilla_10ep,vanilla,10,128,0.0002,100,1.3572,0.743,0.1007,232.9,2026-10-29 05:05,discriminator comparison
+compare_cgan_10ep,cgan,10,128,0.0002,100,1.2881,0.8175,0.8163,239.4,2026-10-29 05:09,discriminator comparison
+compare_acgan_10ep,acgan,10,128,0.0002,100,1.6723,0.7943,0.9493,236.6,2026-10-29 05:13,discriminator comparison
+final_cgan_30ep,cgan,30,128,0.0002,100,1.3296,0.7961,0.893,758.3,2026-10-29 05:25,final model

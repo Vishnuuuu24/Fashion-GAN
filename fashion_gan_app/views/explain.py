@@ -117,5 +117,6 @@ if has(REAL_SAMPLES_FILE):
                   f"{real_probability(pool[:100], np.full(100, cls)).mean():.0%}")
         c3.metric(f"this output, but labelled {CLASS_NAMES[wrong]}", f"{real_probability(out[None], [wrong])[0]:.0%}")
         c4.metric("random noise", f"{real_probability(rand, [cls])[0]:.0%}")
-        st.caption("A well-trained discriminator ends up unsure (≈ 50 %) about both real and generated images — "
-                   "that means the generator is good at fooling it.")
+        st.caption("A well-trained discriminator ends up unsure (≈ 40–50 %) about both real and generated images — "
+                   "that means the generator is good at fooling it. D never saw pure noise during training, so its "
+                   "score for noise is not meaningful.")

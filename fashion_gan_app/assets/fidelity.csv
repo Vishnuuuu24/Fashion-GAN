@@ -1,0 +1,12 @@
+,judge accuracy on real images,judge accuracy on generated images
+T-shirt/top,0.889,0.92
+Trouser,0.973,0.994
+Pullover,0.868,0.798
+Dress,0.928,0.952
+Coat,0.882,0.882
+Sandal,0.985,0.982
+Shirt,0.609,0.436
+Sneaker,0.974,0.958
+Bag,0.977,0.976
+Ankle boot,0.941,0.944
+ALL,0.9026,0.8842
